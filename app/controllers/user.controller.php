@@ -35,11 +35,14 @@ class UserController extends ApiController {
 
 
     public function verifyUser() {
-        $user = $this->authHelper->currentUser();
-        if(!$user) {
-            $this->view->response('Unauthorized', 401);
-            return;
-        }
+        //TODO: FALTA IMPLEMENTAR JWT
+        // DESCOMENTAR ESTO CUANDO ESTE LISTO JWT:
+
+        // $user = $this->authHelper->currentUser();
+        // if(!$user) {
+        //     $this->view->response('Unauthorized', 401);
+        //     return;
+        // }
     }
 
 
