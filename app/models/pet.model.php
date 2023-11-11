@@ -1,4 +1,5 @@
 <?php
+require_once('app/models/model.php');
 class PetModel extends Model {
 
     public function __construct()

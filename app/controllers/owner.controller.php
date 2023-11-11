@@ -1,8 +1,7 @@
 <?php
-require_once "./app/controllers/api.controller.php";
-require_once './app/models/owner.model.php';
-require_once './app/views/owner.view.php';
-require_once './app/controllers/user.controller.php';
+require_once('app/models/owner.model.php');
+require_once('app/controllers/user.controller.php');
+require_once('app/controllers/api.controller.php');
 class OwnerController extends ApiController
 {
 
@@ -10,7 +9,7 @@ class OwnerController extends ApiController
     private $userController;
 
     public function __construct()
-    {
+    {   
         parent::__construct();
         $this->model = new OwnerModel();
         $this->userController = new UserController();
@@ -49,7 +48,6 @@ class OwnerController extends ApiController
             }
             $owners = $this->model->getOwners();
             $this->view->response($owners, 200);
-            
         } catch (\Throwable $th) {
             $error = new stdClass();
             $error->message = $th->getMessage();
@@ -61,14 +59,22 @@ class OwnerController extends ApiController
 
     public function getOne($params = [])
     {
-        $this->userController->verifyUser();
+        try {
+            // $this->userController->verifyUser();
 
-        $idowner = $params[':ID'];
-        $owner = $this->model->getOwnerByID($idowner);
-        if ($owner) {
-            $this->view->response($owner, 200);
-        } else {
-            $this->view->response('The owner with ID ' . $idowner . ' doesnt exist', 404);
+            $idowner = $params[':ID'];
+            $owner = $this->model->getOwnerByID($idowner);
+            if ($owner) {
+                $this->view->response($owner, 200);
+            } else {
+                $this->view->response('The owner with ID ' . $idowner . ' doesnt exist', 404);
+            }
+        } catch (\Throwable $th) {
+            $error = new stdClass();
+            $error->message = $th->getMessage();
+            $error->type = 'Error';
+            $error->status = 500;
+            $this->view->response($error, 500);
         }
     }
 

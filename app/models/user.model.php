@@ -1,5 +1,5 @@
 <?php
-
+require_once('app/models/model.php');
 class UsersModel extends Model {
 
     public function __construct()
