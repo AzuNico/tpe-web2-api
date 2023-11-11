@@ -2,6 +2,9 @@
 class Model
 {
     protected $db;
+    protected $tableName; // Se setea en el constructor de cada modelo
+
+    protected $allowedFields; // Se setea en el constructor de cada modelo
 
     function __construct()
     {
@@ -126,5 +129,52 @@ class Model
                 END;
             $this->db->query($sql);
         }
+    }
+
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    public function getAllowedFields()
+    {
+        return $this->allowedFields;
+    }
+
+
+    public function fieldExists($field)
+    {
+        return in_array($field, $this->allowedFields);
+    }
+
+    /**
+     * Función para ordenar los resultados de una tabla,
+     * si el campo no existe, ordena por ID.
+     * si la dirección no es ASC o DESC, ordena por ASC.
+     * @param string $field campo por el que se quiere ordenar
+     * @param string $dir dirección de la ordenación (ASC o DESC)
+     */
+    function order($field, $dir)
+    {
+        $table = $this->tableName;
+        $validDir = ['ASC', 'DESC'];
+
+        if(!isset($table)){
+            return null;
+        }
+
+        // si la dirección no es ASC o DESC, ordena por ASC.
+        if (!in_array($dir, $validDir)) {
+            $dir = 'ASC';
+        }
+        // si el campo no existe ordena por ID.
+        if (!$this->fieldExists($field)) {
+            $query = $this->db->prepare("SELECT * FROM $table ORDER BY ID $dir");
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_OBJ);
+        }
+        $query = $this->db->prepare("SELECT * FROM $table ORDER BY $field $dir");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_OBJ);
     }
 }
