@@ -5,7 +5,8 @@ require_once 'app/router/api.router.php';
 $router = new Router();
 
 #                 endpoint      verbo     controller           método
-$router->addRoute('owners',     'GET',    'OwnerController',   'get');
+$router->addRoute('owners',     'GET',    'OwnerController',   'get'   );
+$router->addRoute('owners/:ID', 'GET',    'OwnerController',   'getOne');
 $router->addRoute('owners',     'POST',   'OwnerController',   'create');
 $router->addRoute('owners/:ID', 'PUT',    'OwnerController',   'update');
 $router->addRoute('owners/:ID', 'DELETE', 'OwnerController',   'delete');

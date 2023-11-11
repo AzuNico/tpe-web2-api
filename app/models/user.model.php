@@ -1,6 +1,13 @@
 <?php
 
 class UsersModel extends Model {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->tableName = 'usuarios';
+        $this->allowedFields = ['USER', 'PASSWORD'];
+    }
    
     public function getByUser($user)
     {

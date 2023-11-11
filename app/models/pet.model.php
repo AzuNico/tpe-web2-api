@@ -1,5 +1,12 @@
 <?php
 class PetModel extends Model {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->tableName = 'mascotas';
+        $this->allowedFields = ['NOMBRE', 'EDAD', 'PESO', 'TIPO', 'ID_DUENIO'];
+    }
  
     public function getPets(){
         $query = $this->db->prepare('SELECT * FROM `mascotas`');

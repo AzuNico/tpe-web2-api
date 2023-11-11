@@ -1,6 +1,14 @@
 <?php
 class OwnerModel extends Model {
 
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->tableName = 'duenio';
+        $this->allowedFields = ['NOMBRE', 'MAIL', 'TELEFONO'];
+    }
+
     public function getOwners()
     {
         $query = $this->db->prepare('SELECT * FROM `duenio` WHERE 1');
