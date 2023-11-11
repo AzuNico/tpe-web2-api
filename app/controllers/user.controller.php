@@ -1,6 +1,8 @@
 <?php
 require_once './app/controllers/api.controller.php';
 require_once './app/models/user.model.php';
+require_once './app/helpers/auth.api.helper.php';
+
 class UserController extends ApiController {
     
 
@@ -27,6 +29,8 @@ class UserController extends ApiController {
             $this->view->response($users, 200);
         }
     }
+
+    public function getOne($params = []){}
 
     public function update(){}
 

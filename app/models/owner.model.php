@@ -1,5 +1,14 @@
 <?php
+require_once('app/models/model.php');
 class OwnerModel extends Model {
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->tableName = 'duenio';
+        $this->allowedFields = ['NOMBRE', 'MAIL', 'TELEFONO'];
+    }
 
     public function getOwners()
     {
