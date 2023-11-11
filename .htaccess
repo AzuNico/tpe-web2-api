@@ -8,5 +8,5 @@
     RewriteCond %{REQUEST_FILENAME} -d
 
     RewriteRule \.(?:css|js|jpe?g|gif|png)$ - [L]
-    RewriteRule ^api/(.*)$ index.php?resource=$1 [QSA,L]
+    RewriteRule ^api/(.*)$ routes.php?resource=$1 [QSA,L]
 </IfModule>
