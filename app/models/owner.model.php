@@ -9,6 +9,11 @@ class OwnerModel extends Model
         parent::__construct();
         $this->tableName = 'duenio';
         $this->allowedFields = ['ID', 'NOMBRE', 'MAIL', 'TELEFONO'];
+        $this->dbFieldsMap = [
+            'id' => 'ID',
+            'fullName' => 'NOMBRE',
+            'contactEmail' => 'MAIL'
+        ];
     }
 
     public function getOwners($order)

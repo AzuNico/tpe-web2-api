@@ -6,6 +6,8 @@ class Model
 
     protected $allowedFields; // Se setea en el constructor de cada modelo
 
+    protected $dbFieldsMap;
+
     function __construct()
     {
         $this->db = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB . ';charset=utf8', MYSQL_USER, MYSQL_PASS);
@@ -139,6 +141,11 @@ class Model
     public function getAllowedFields()
     {
         return $this->allowedFields;
+    }
+
+    public function getDbFieldsMap()
+    {
+        return $this->dbFieldsMap;
     }
 
 

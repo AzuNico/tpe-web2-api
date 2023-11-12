@@ -8,6 +8,14 @@ class PetModel extends Model
         parent::__construct();
         $this->tableName = 'mascotas';
         $this->allowedFields = ['ID', 'NOMBRE', 'EDAD', 'PESO', 'TIPO', 'ID_DUENIO'];
+        $this->dbFieldsMap = [
+            'id' => 'ID',
+            'name' => 'NOMBRE',
+            'age' => 'EDAD',
+            'weight' => 'PESO',
+            'type' => 'TIPO',
+            'ownerId' => 'ID_DUENIO'
+        ];
     }
 
     public function getPets()
