@@ -18,12 +18,23 @@ class PetController extends ApiController
         $this->authHelper = new AuthHelper();
     }
 
-    public function create(){}
-    public function get($params = []){}
-    
-    public function update(){}
+    public function create()
+    {
+    }
+    public function get($params = [])
+    {
+    }
+    public function getOne($params = [])
+    {
+    }
 
-    public function delete($params = []){}
+    public function update($params = [])
+    {
+    }
+
+    public function delete($params = [])
+    {
+    }
 
 
 

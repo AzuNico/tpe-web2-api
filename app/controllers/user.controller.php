@@ -23,16 +23,16 @@ class UserController extends ApiController {
         $this->verifyUser();
         if(isset($params['id'])){
             $user = $this->model->getUserById($params['id']);
-            $this->view->response($user, 200);
+            $this->view->responseWithData($user, 200);
         }else{
             $users = $this->model->getAllUsers();
-            $this->view->response($users, 200);
+            $this->view->responseWithData($users, 200);
         }
     }
 
     public function getOne($params = []){}
 
-    public function update(){}
+    public function update($params = []){}
 
     public function delete($params = []){}
 

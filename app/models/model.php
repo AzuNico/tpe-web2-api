@@ -154,12 +154,12 @@ class Model
      * @param string $field campo por el que se quiere ordenar
      * @param string $dir dirección de la ordenación (ASC o DESC)
      */
-    function order($field, $dir)
+    function orderBy($field, $dir)
     {
         $table = $this->tableName;
         $validDir = ['ASC', 'DESC'];
 
-        if(!isset($table)){
+        if (!isset($table)) {
             return null;
         }
 

@@ -24,6 +24,6 @@ abstract class ApiController
     public abstract function create(); // POST viaja por body
     public abstract function get($params = []); // GET viaja por URL
     public abstract function getOne($params = []); // GET viaja por URL
-    public abstract function update(); // PUT viaja por body
+    public abstract function update($params = []); // PUT viaja por body
     public abstract function delete($params = []); // DELETE viaja por URL
 }

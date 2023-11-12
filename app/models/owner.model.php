@@ -1,18 +1,19 @@
 <?php
 require_once('app/models/model.php');
-class OwnerModel extends Model {
+class OwnerModel extends Model
+{
 
 
     public function __construct()
     {
         parent::__construct();
         $this->tableName = 'duenio';
-        $this->allowedFields = ['NOMBRE', 'MAIL', 'TELEFONO'];
+        $this->allowedFields = ['ID', 'NOMBRE', 'MAIL', 'TELEFONO'];
     }
 
-    public function getOwners()
+    public function getOwners($order)
     {
-        $query = $this->db->prepare('SELECT * FROM `duenio` WHERE 1');
+        $query = $this->db->prepare('SELECT * FROM `duenio` ORDER BY `ID` ' . $order);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
@@ -45,5 +46,4 @@ class OwnerModel extends Model {
         $query = $this->db->prepare('DELETE FROM `duenio` WHERE `ID`=?');
         $query->execute([$id]);
     }
-
 }
