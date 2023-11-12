@@ -1,22 +1,23 @@
 <?php
-
-use function PHPSTORM_META\map;
-
 require_once('app/models/owner.model.php');
 require_once('app/controllers/user.controller.php');
 require_once('app/controllers/api.controller.php');
 require_once('app/helpers/adapter.api.helper.php');
+require_once('app/models/pet.model.php');
 class OwnerController extends ApiController
 {
 
     private $model;
     private $userController;
 
+    private $petModel;
+
     public function __construct()
     {
         parent::__construct();
         $this->model = new OwnerModel();
         $this->userController = new UserController();
+        $this->petModel = new PetModel();
     }
 
     public function create($params = [])
@@ -121,18 +122,33 @@ class OwnerController extends ApiController
 
     public function delete($params = [])
     {
-        $this->userController->verifyUser();
+        try {
+            $this->userController->verifyUser();
 
-        $idowner = $params[':ID'];
+            $idowner = $params[':ID'];
 
-        $owner = $this->model->getOwnerByID($idowner);
+            if (empty($idowner)) {
+                $this->view->responseMessage('Falta información para eliminar el recurso', 400);
+                return;
+            }
 
-        if (empty($owner)) {
-            $this->view->responseMessage('El recurso solicitado con id ' . $idowner . ' no existe', 404);
-            return;
+            $owner = $this->model->getOwnerByID($idowner);
+
+            if (empty($owner)) {
+                $this->view->responseMessage('El recurso solicitado con id ' . $idowner . ' no existe', 404);
+                return;
+            }
+
+            if ($this->petModel->getPetsByOwner($idowner)) {
+                $this->view->responseMessage('No se puede eliminar el owner con id ' . $idowner . ' porque tiene mascotas asociadas', 400);
+                return;
+            }
+
+            $this->model->deleteOwner($idowner);
+            $this->view->responseWithData('Deleted successfully', 200);
+        } catch (\Throwable $th) {
+            $errorMessage = 'Error al eliminar el owner con ID ' . $idowner;
+            $this->view->responseMessage($errorMessage, 500);
         }
-
-        $this->model->deleteOwner($idowner);
-        $this->view->responseWithData('Deleted successfully', 200);
     }
 }
