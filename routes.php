@@ -18,6 +18,7 @@ $router->addRoute("owners/:ID", "DELETE", "OwnerController",   "delete");
 
 $router->addRoute("pets",       "GET",    "PetController",     "get"   );
 $router->addRoute("pets/:ID",   "GET",    "PetController",     "getOne");
+$router->addRoute("pets/:ID",   "PUT",    "PetController",     "update");
 
 
 

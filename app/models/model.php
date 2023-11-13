@@ -188,7 +188,7 @@ class Model
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
-    function getSortDataByField($fieldParam, $orderParam = 'A')
+    function getSortDataByField($fieldParam, $orderParam = 'ASC')
     {
         try {
             $map = $this->getDbFieldsMap();
