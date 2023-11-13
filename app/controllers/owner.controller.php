@@ -39,11 +39,21 @@ class OwnerController extends ApiController
 
             if (!empty($field)) {
                 $owners = $this->model->getSortDataByField($field, $order);
+                foreach ($owners as $owner) {
+                    $ownerPets = $this->petModel->getPetsByOwner($owner->id);
+                    $owner->pets = empty($ownerPets) ? [] : $ownerPets;
+                }
                 $this->view->responseWithData($owners, 200);
                 return;
             }
 
             $owners = $this->model->getOwners($order);
+
+            foreach ($owners as $owner) {
+                $ownerPets = $this->petModel->getPetsByOwner($owner->id);
+                $owner->pets = empty($ownerPets) ? [] : $ownerPets;
+            }
+
             $this->view->responseWithData($owners, 200);
         } catch (\Throwable $th) {
             $this->view->responseStatus(500);
@@ -58,6 +68,10 @@ class OwnerController extends ApiController
             $owner = $this->model->getOwnerByID($idowner);
 
             if ($owner) {
+
+                $ownerPets = $this->petModel->getPetsByOwner($owner->id);
+                $owner->pets = empty($ownerPets) ? [] : $ownerPets;
+
                 $this->view->responseWithData($owner, 200);
             } else {
                 $message = 'The owner with ID ' . $idowner . ' doesnt exist';
@@ -80,12 +94,12 @@ class OwnerController extends ApiController
 
             $owner = $this->model->getOwnerByID($body->id);
 
-            if(empty($owner)){
+            if (empty($owner)) {
                 $this->view->responseMessage('El recurso que desea actualizar con id ' . $body->id . ' no existe', 404);
                 return;
             }
 
-            
+
             $idowner = $body->id;
             $name = $body->fullName;
             $email = $body->contactEmail;
