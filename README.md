@@ -44,8 +44,55 @@ Las respuestas de los servicios cumplen con la siguiente estructura:
 }
 ```
 
-## AVISO
-Los ejemplos que vienen a continuación, asumen que la información solicitada se encuentra dentro del atributo "data".
+## Login
+
+### `POST /login`
+
+Solicitud:
+```http
+POST /login
+Content-Type: application/json
+
+{
+    "user": "juanperez@gmail.com",
+    "password": "1234"
+}
+```
+
+Respuesta:
+```json
+{
+  "data": {
+    "token": "header.payload.signature"
+  },
+  "status": 200,
+  "message": "Logueado correctamente"
+}
+```
+
+### `POST /register`
+
+El atributo `user` debe ser un formato de mail válido.
+
+Solicitud:
+```http
+POST /register
+Content-Type: application/json
+
+{
+    "user": "juanperez@gmail.com",
+    "password": "1234"
+}
+```
+
+Respuesta:
+```json
+{
+  "status": 201,
+  "message": "Se ha registrado correctamente"
+}
+```
+
 
 ## Dueños
 
@@ -55,20 +102,24 @@ Solicitud:
 
 Respuesta:
 ```json
-[
+{
+  "data": [
     {
-    "id": 1,
-    "fullName": "Juan Perez",
-    "contactEmail": "juanperez@gmail.com",
-    "phoneNumber": "42423423"
-},
+      "id": 1,
+      "fullName": "Juan Perez",
+      "contactEmail": "juanperez@gmail.com",
+      "phoneNumber": "42423423"
+    },
     {
-    "id": 2,
-    "fullName": "Ana Gomez",
-    "contactEmail": "anagomez@gmail.com",
-    "phoneNumber": "42423423"
+      "id": 2,
+      "fullName": "Ana Gomez",
+      "contactEmail": "anagomez@gmail.com",
+      "phoneNumber": "42423423"
+    }
+  ],
+  "status": 200,
+  "message": "OK"
 }
-]
 ```
 
 Solicitud:
@@ -78,10 +129,14 @@ Solicitud:
 Respuesta:
 ```json
 {
+  "data": {
     "id": 1,
     "fullName": "Juan Perez",
     "contactEmail": "juanperez@gmail.com",
     "phoneNumber": "42423423"
+  },
+  "status": 200,
+  "message": "OK"
 }
 ```
 
@@ -103,7 +158,7 @@ Respuesta:
 
 ```json
 {
-    "status":200,
+    "status":201,
     "message": "Created successfully"
 }
 ```
@@ -144,6 +199,32 @@ Respuesta:
 }
 ```
 
+## Mascotas
+
+
+
+
+
+
+
 ## Errores
 
 En caso de error, la API devolverá un código de estado HTTP y un objeto JSON con más información sobre el error.
+
+## Ejemplos:
+
+Respuesta:
+```json
+{
+    "status": 500,
+    "message": "Internal Server Error"
+}
+```
+
+Respuesta:
+```json
+{
+    "status": 404,
+    "message": "Not found"
+}
+```

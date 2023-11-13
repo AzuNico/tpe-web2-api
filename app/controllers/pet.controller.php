@@ -21,6 +21,7 @@ class PetController extends ApiController
 
     public function create()
     {
+        // status 201 created
     }
     public function get($params = [])
     {
