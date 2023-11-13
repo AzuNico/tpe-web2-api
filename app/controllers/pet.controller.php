@@ -61,7 +61,7 @@ class PetController extends ApiController
         $id = $params[':ID'];
         $body = $this->getData();
         if (empty($body) || $body->name == null || $body->age == null || $body->weight == null || $body->type == null || $body->ownerId == null) {
-            $this->view->responseMessage('Missing data', 400);
+            $this->view->responseMessage('Falta información para actualizar el recurso', 400);
             return;
         }
         $name = $body->name;
