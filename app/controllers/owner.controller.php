@@ -29,7 +29,7 @@ class OwnerController extends ApiController
         $email = $body->contactEmail;
         $phone = $body->phoneNumber;
         $this->model->insertOwner($name, $email, $phone);
-        $this->view->responseMessage('Created successfully', 200);
+        $this->view->responseMessage('Created successfully', 201);
     }
     public function get($params = [])
     {

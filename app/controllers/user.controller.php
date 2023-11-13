@@ -64,7 +64,7 @@ class UserController extends ApiController
             $password = $body->password;
 
             $this->model->registerUser($email, $password);
-            $this->view->responseMessage('Se ha registrado correctamente', 200);
+            $this->view->responseMessage('Se ha registrado correctamente', 201);
         } catch (\Throwable $th) {
             $this->view->responseMessage('Error al registrar usuario', 500);
         }
