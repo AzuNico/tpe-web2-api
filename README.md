@@ -32,6 +32,45 @@ Para las solicitudes `POST` y `PUT`, incluye los datos del recurso en el cuerpo 
 
 Esta API utiliza JWT para autenticar al usuario, sólo los usuarios registrados pueden crear recursos `POST`, editarlos `PUT` o eliminarlos `DELETE`.
 
+## Ordenamiento
+
+Por defecto, las consultas de tipo `GET` se ordenan por `id` de manera `ascendente`.
+
+Para ordenar los resultados de busqueda del metodo `GET` debera utilizar los siguientes query params:
+
+#### Sort
+
+### `GET /{recurso}?sort={nombreAtributo}`
+
+Ejemplo:
+
+```http
+GET /owners?sort=fullName
+```
+
+#### Order
+
+Establece la dirección del ordenamiento.
+Utilice `D` para ordenar de manera `descendente` de cualquier otra forma lo ordenara por su valor por defecto (`ascendente`)
+
+### `GET /{recurso}?order=D`
+
+Ejemplo:
+
+```http
+GET /owners?order=D
+```
+
+## Bonus Track
+
+Puede mejorar su ordenamiento si realiza una combinación de ambos parametros `sort` y `order`
+
+Ejemplo:
+
+```http
+GET /owners?sort=fullName&order=D
+```
+
 # Ejemplos de Solicitudes y Respuestas
 
 Las respuestas de los servicios cumplen con la siguiente estructura:
@@ -49,6 +88,7 @@ Las respuestas de los servicios cumplen con la siguiente estructura:
 ### `POST /login`
 
 Solicitud:
+
 ```http
 POST /login
 Content-Type: application/json
@@ -60,6 +100,7 @@ Content-Type: application/json
 ```
 
 Respuesta:
+
 ```json
 {
   "data": {
