@@ -164,8 +164,6 @@ class Model
      */
     function orderBy($field, $dir)
     {
-        echo $field;
-        echo $dir;
         $table = $this->tableName;
         $validDir = ['ASC', 'DESC'];
 
@@ -193,7 +191,7 @@ class Model
         try {
             $map = $this->getDbFieldsMap();
             $field = (!empty($fieldParam) && $this->fieldExists(mapAttributeToDatabaseField($fieldParam, $map))) ? $fieldParam : '';
-            
+
 
             if (!empty($field)) {
                 $field = mapAttributeToDatabaseField($field, $map);
