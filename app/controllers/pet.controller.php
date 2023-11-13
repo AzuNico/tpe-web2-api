@@ -19,9 +19,24 @@ class PetController extends ApiController
         $this->userController = new UserController();
     }
 
-    public function create()
+    public function create($params = [])
     {
-        // status 201 created
+        //$this->userController->verifyUser();
+
+        $body = $this->getData();
+        var_dump($body);
+        //$this->validateRequestBody($body);
+        
+
+        $nombre = $body->nombre;
+        $edad = $body->edad;
+        $peso = $body->peso;
+        $tipo = $body->tipo;
+        $id_duenio = $body->id_duenio;
+
+        $this->model->insertPet($nombre, $edad, $peso, $tipo, $id_duenio);
+
+        $this->view->responseMessage("Creado!",201);
     }
     public function get($params = [])
     {
