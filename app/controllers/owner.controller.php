@@ -36,6 +36,8 @@ class OwnerController extends ApiController
         try {
             $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
+            $filter = !empty($_GET['search']) ? $_GET['search'] : '';           //new filtro
+
 
             if (!empty($field)) {
                 $owners = $this->model->getSortDataByField($field, $order);
@@ -44,6 +46,12 @@ class OwnerController extends ApiController
                     $owner->pets = empty($ownerPets) ? [] : $ownerPets;
                 }
                 $this->view->responseWithData($owners, 200);
+                return;
+            }
+
+            if (!empty($filter)){
+                $owners = $this->model->getFilterBy($filter);
+                $this->view->responseWithData($owners,200);
                 return;
             }
 

@@ -36,6 +36,15 @@ class OwnerModel extends Model
         return $owner;
     }
 
+    public function getFilterBy($filter){
+        echo 'a';
+        $query = $this->db->prepare('SELECT * FROM `duenio` WHERE id LIKE ? OR nombre LIKE ? OR mail LIKE ? OR telefono LIKE ?');
+        $query->execute([$filter,$filter,$filter,$filter]);
+        $query = $query->fetchAll(PDO::FETCH_OBJ);
+        $owners = mapDataList($query, $this->dbFieldsMap);
+        return $owners;
+    }
+
     //Esta funcion hace un alta de un dueño
     public function insertOwner($name, $email, $tel)
     {

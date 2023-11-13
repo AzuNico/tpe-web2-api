@@ -43,10 +43,17 @@ class PetController extends ApiController
         try {
             $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
+            $filter = !empty($_GET['search']) ? $_GET['search'] : '';           //new filtro
 
             if (!empty($field)) {
                 $pets = $this->model->getSortDataByField($field, $order);
                 $this->view->responseWithData($pets, 200);
+                return;
+            }
+
+            if (!empty($filter)){
+                $pets = $this->model->getFilterBy($filter);
+                $this->view->responseWithData($pets,200);
                 return;
             }
 
