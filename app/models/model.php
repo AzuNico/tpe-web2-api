@@ -1,4 +1,5 @@
 <?php
+require_once('app/helpers/adapter.api.helper.php');
 class Model
 {
     protected $db;
@@ -163,6 +164,8 @@ class Model
      */
     function orderBy($field, $dir)
     {
+        echo $field;
+        echo $dir;
         $table = $this->tableName;
         $validDir = ['ASC', 'DESC'];
 
@@ -183,5 +186,26 @@ class Model
         $query = $this->db->prepare("SELECT * FROM $table ORDER BY $field $dir");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    function getSortDataByField($fieldParam, $orderParam = 'A')
+    {
+        try {
+            $map = $this->getDbFieldsMap();
+            $field = (!empty($fieldParam) && $this->fieldExists(mapAttributeToDatabaseField($fieldParam, $map))) ? $fieldParam : '';
+            
+
+            if (!empty($field)) {
+                $field = mapAttributeToDatabaseField($field, $map);
+                $dataSorted = $this->orderBy($field, $orderParam);
+                $dataSorted = mapDataList($dataSorted, $map);
+
+                return $dataSorted;
+            }
+            return null;
+        } catch (\Throwable $th) {
+            // echo $th;
+            die($th);
+        }
     }
 }

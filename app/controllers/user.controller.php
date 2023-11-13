@@ -4,9 +4,6 @@ require_once './app/models/user.model.php';
 require_once './app/helpers/auth.api.helper.php';
 
 class UserController extends ApiController {
-    
-
-    private $model;
     private $authHelper;
 
     public function __construct() {

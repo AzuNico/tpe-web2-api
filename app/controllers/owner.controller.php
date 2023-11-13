@@ -6,8 +6,6 @@ require_once('app/helpers/adapter.api.helper.php');
 require_once('app/models/pet.model.php');
 class OwnerController extends ApiController
 {
-
-    private $model;
     private $userController;
 
     private $petModel;
@@ -40,23 +38,18 @@ class OwnerController extends ApiController
     {
         try {
             $this->userController->verifyUser();
-
-            $field = (!empty($_GET['sort']) && $this->model->fieldExists(mapRequestField($_GET['sort']))) ? $_GET['sort'] : '';
-
-            // si order es D, entonces es DESC, sino ASC
+            $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
 
             if (!empty($field)) {
-
-                $field = mapRequestField($field);
-                $owners = $this->model->orderBy($field, $order);
-                $owners = mapOwners($owners);
+                $owners = $this->model->getSortDataByField($field, $order);
                 $this->view->responseWithData($owners, 200);
                 return;
             }
+
             $owners = $this->model->getOwners($order);
-            $owners = mapOwners($owners);
             $this->view->responseWithData($owners, 200);
+
         } catch (\Throwable $th) {
             $this->view->responseStatus(500);
         }
@@ -66,13 +59,13 @@ class OwnerController extends ApiController
     {
         try {
             $this->userController->verifyUser();
-
+            $map = $this->model->getDbFieldsMap();
             $idowner = $params[':ID'];
 
             $owner = $this->model->getOwnerByID($idowner);
 
             if ($owner) {
-                $owner = mapOwners($owner);
+                $owner = mapDataList($owner, $map);
                 $this->view->responseWithData($owner, 200);
             } else {
                 $message = 'The owner with ID ' . $idowner . ' doesnt exist';

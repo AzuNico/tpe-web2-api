@@ -1,51 +1,37 @@
 <?php
 require_once('app/dtos/owner.dto.php');
 
-function mapOwner($owner)
+function mapObject($object, $map)
 {
-    $ownerDTO = new OwnerDTO();
-    $ownerDTO->id = $owner->ID;
-    $ownerDTO->fullName = $owner->NOMBRE;
-    $ownerDTO->contactEmail = $owner->MAIL;
-    $ownerDTO->phoneNumber = $owner->TELEFONO;
-    return $ownerDTO;
-}
-
-function mapOwners($owners)
-{
-
-    if (!is_array($owners)) {
-        return mapOwner($owners);
+    $objectDTO = [];
+    foreach ($map as $key => $value) {
+        $objectDTO[$key] = $object[$value];
     }
+    return $objectDTO;
+}
 
-    $ownersDTO = [];
-    foreach ($owners as $owner) {
-        $ownerDTO = mapOwner($owner);
-        array_push($ownersDTO, $ownerDTO);
+//  Función que enmascara los campos de la base de datos con los nombres de los atributos que se usan para el cliente.
+function mapDataList($dataList, $map)
+{
+    $dataToClient = [];
+    foreach ($dataList as $object) {
+        $newObject = new stdClass();
+        foreach ($map as $clientAttribute => $dbField) {
+            if (property_exists($object, $dbField)) {
+                $newObject->$clientAttribute = $object->$dbField;
+            }
+        }
+        $dataToClient[] = $newObject;
     }
-    return $ownersDTO;
+    return $dataToClient;
 }
 
-// Mapea un ownerDTO a un owner de la base de datos
-function mapOwnerFromRequestToDataBase($request)
-{
-    $ownerDTO = mapOwner($request);
-    return $ownerDTO->toDataBase();
-}
 
-// Función que transforma una key del request en un campo de la base de datos del owner
-function mapRequestField($field)
+// Mapea el atributo del cliente con el campo de la base de datos.
+function mapAttributeToDatabaseField($attribute, $dbFields)
 {
-    $map = [
-        'id' => 'ID',
-        'fullName' => 'NOMBRE',
-        'contactEmail' => 'MAIL'
-    ];
-    if (array_key_exists($field, $map)) {
-        return $map[$field];
+    if (array_key_exists($attribute, $dbFields)) {
+        return $dbFields[$attribute];
     }
     return 'ID';
 }
-
-
-

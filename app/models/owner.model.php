@@ -1,5 +1,6 @@
 <?php
 require_once('app/models/model.php');
+require_once('app/helpers/adapter.api.helper.php');
 class OwnerModel extends Model
 {
 
@@ -12,15 +13,18 @@ class OwnerModel extends Model
         $this->dbFieldsMap = [
             'id' => 'ID',
             'fullName' => 'NOMBRE',
-            'contactEmail' => 'MAIL'
+            'contactEmail' => 'MAIL',
+            'phoneNumber' => 'TELEFONO',
         ];
     }
 
-    public function getOwners($order)
+    public function getOwners($order = 'ASC')
     {
         $query = $this->db->prepare('SELECT * FROM `duenio` ORDER BY `ID` ' . $order);
         $query->execute();
-        return $query->fetchAll(PDO::FETCH_OBJ);
+        $query = $query->fetchAll(PDO::FETCH_OBJ);
+        $owners = mapDataList($query, $this->dbFieldsMap);
+        return $owners;
     }
 
     public function getOwnerByID($id)

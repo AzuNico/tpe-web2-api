@@ -4,7 +4,9 @@ require_once 'app/views/api.view.php';
 abstract class ApiController
 {
     protected $view;
-    private $data;
+
+    protected $model;
+    protected $data;
 
     function __construct()
     {

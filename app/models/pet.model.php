@@ -1,5 +1,6 @@
 <?php
 require_once('app/models/model.php');
+require_once('app/helpers/adapter.api.helper.php');
 class PetModel extends Model
 {
 
@@ -18,11 +19,13 @@ class PetModel extends Model
         ];
     }
 
-    public function getPets()
+    public function getPets($order = 'ASC')
     {
-        $query = $this->db->prepare('SELECT * FROM `mascotas`');
+        $query = $this->db->prepare('SELECT * FROM `mascotas`' . ' ORDER BY `ID` ' . $order);
         $query->execute();
-        return $query->fetchAll(PDO::FETCH_OBJ);
+        $query = $query->fetchAll(PDO::FETCH_OBJ);
+        $pets = mapDataList($query, $this->dbFieldsMap);
+        return $pets;
     }
 
     public function getPetByID($id)
