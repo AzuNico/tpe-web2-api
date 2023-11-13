@@ -34,7 +34,6 @@ class OwnerController extends ApiController
     public function get($params = [])
     {
         try {
-            $this->userController->verifyUser();
             $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
 
@@ -54,7 +53,6 @@ class OwnerController extends ApiController
     public function getOne($params = [])
     {
         try {
-            $this->userController->verifyUser();
             $idowner = $params[':ID'];
 
             $owner = $this->model->getOwnerByID($idowner);
