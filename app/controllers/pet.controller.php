@@ -25,7 +25,6 @@ class PetController extends ApiController
     public function get($params = [])
     {
         try {
-            $this->userController->verifyUser();
             $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
 
@@ -45,7 +44,6 @@ class PetController extends ApiController
     public function getOne($params = [])
     {
         try {
-            $this->userController->verifyUser();
             $id = $params[':ID'];
             $pet = $this->model->getPetByID($id);
             $this->view->responseWithData($pet, 200);
