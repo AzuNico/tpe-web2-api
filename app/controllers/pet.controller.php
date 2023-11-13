@@ -36,7 +36,7 @@ class PetController extends ApiController
 
         $this->model->insertPet($nombre, $edad, $peso, $tipo, $id_duenio);
 
-        $this->view->responseMessage("Creado con exito",201);
+        $this->view->responseMessage("Created successfully",201);
     }
     public function get($params = [])
     {
