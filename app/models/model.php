@@ -1,10 +1,13 @@
 <?php
+require_once('app/helpers/adapter.api.helper.php');
 class Model
 {
     protected $db;
     protected $tableName; // Se setea en el constructor de cada modelo
 
     protected $allowedFields; // Se setea en el constructor de cada modelo
+
+    protected $dbFieldsMap;
 
     function __construct()
     {
@@ -141,6 +144,11 @@ class Model
         return $this->allowedFields;
     }
 
+    public function getDbFieldsMap()
+    {
+        return $this->dbFieldsMap;
+    }
+
 
     public function fieldExists($field)
     {
@@ -154,12 +162,14 @@ class Model
      * @param string $field campo por el que se quiere ordenar
      * @param string $dir dirección de la ordenación (ASC o DESC)
      */
-    function order($field, $dir)
+    function orderBy($field, $dir)
     {
+        echo $field;
+        echo $dir;
         $table = $this->tableName;
         $validDir = ['ASC', 'DESC'];
 
-        if(!isset($table)){
+        if (!isset($table)) {
             return null;
         }
 
@@ -176,5 +186,26 @@ class Model
         $query = $this->db->prepare("SELECT * FROM $table ORDER BY $field $dir");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    function getSortDataByField($fieldParam, $orderParam = 'ASC')
+    {
+        try {
+            $map = $this->getDbFieldsMap();
+            $field = (!empty($fieldParam) && $this->fieldExists(mapAttributeToDatabaseField($fieldParam, $map))) ? $fieldParam : '';
+            
+
+            if (!empty($field)) {
+                $field = mapAttributeToDatabaseField($field, $map);
+                $dataSorted = $this->orderBy($field, $orderParam);
+                $dataSorted = mapDataList($dataSorted, $map);
+
+                return $dataSorted;
+            }
+            return null;
+        } catch (\Throwable $th) {
+            // echo $th;
+            die($th);
+        }
     }
 }
