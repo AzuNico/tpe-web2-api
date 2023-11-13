@@ -49,7 +49,6 @@ class OwnerController extends ApiController
 
             $owners = $this->model->getOwners($order);
             $this->view->responseWithData($owners, 200);
-
         } catch (\Throwable $th) {
             $this->view->responseStatus(500);
         }
@@ -59,19 +58,18 @@ class OwnerController extends ApiController
     {
         try {
             $this->userController->verifyUser();
-            $map = $this->model->getDbFieldsMap();
             $idowner = $params[':ID'];
 
             $owner = $this->model->getOwnerByID($idowner);
 
             if ($owner) {
-                $owner = mapDataList($owner, $map);
                 $this->view->responseWithData($owner, 200);
             } else {
                 $message = 'The owner with ID ' . $idowner . ' doesnt exist';
                 $this->view->responseWithData(null, 404, $message);
             }
         } catch (\Throwable $th) {
+            echo $th;
             $errorMessage = 'Error al obtener el owner con ID ' . $idowner;
             $this->view->responseMessage($errorMessage, 500);
         }

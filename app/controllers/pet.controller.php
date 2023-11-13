@@ -57,6 +57,24 @@ class PetController extends ApiController
 
     public function update($params = [])
     {
+      try {
+        $this->userController->verifyUser();
+        $id = $params[':ID'];
+        $body = $this->getData();
+        if (empty($body) || $body->name == null || $body->age == null || $body->weight == null || $body->type == null || $body->idowner == null) {
+            $this->view->responseMessage('Missing data', 400);
+            return;
+        }
+        $name = $body->name;
+        $age = $body->age;
+        $weight = $body->weight;
+        $type = $body->type;
+        $idowner = $body->idowner;
+        $this->model->editPet($id, $name, $age, $weight, $type, $idowner);
+        $this->view->responseMessage('Updated successfully', 200);
+      } catch (Exception $e) {
+        $this->view->responseMessage("Error", 500);
+      }
     }
 
     public function delete($params = [])
