@@ -1,27 +1,28 @@
 <?php
-require_once('app/dtos/owner.dto.php');
 
 function mapObject($object, $map)
 {
-    $objectDTO = [];
-    foreach ($map as $key => $value) {
-        $objectDTO[$key] = $object[$value];
+    if (empty($object)) {
+        return null;
     }
-    return $objectDTO;
+    $newObject = new stdClass();
+    foreach ($map as $clientAttribute => $dbField) {
+        if (property_exists($object, $dbField)) {
+            $newObject->$clientAttribute = $object->$dbField;
+        }
+    }
+    return $newObject;
 }
 
 //  Función que enmascara los campos de la base de datos con los nombres de los atributos que se usan para el cliente.
 function mapDataList($dataList, $map)
 {
+    if (empty($dataList)) {
+        return null;
+    }
     $dataToClient = [];
     foreach ($dataList as $object) {
-        $newObject = new stdClass();
-        foreach ($map as $clientAttribute => $dbField) {
-            if (property_exists($object, $dbField)) {
-                $newObject->$clientAttribute = $object->$dbField;
-            }
-        }
-        $dataToClient[] = $newObject;
+        $dataToClient[] = mapObject($object, $map);
     }
     return $dataToClient;
 }

@@ -31,7 +31,9 @@ class OwnerModel extends Model
     {
         $query = $this->db->prepare('SELECT * FROM `duenio` WHERE `ID` = ?');
         $query->execute([$id]);
-        return $query->fetch(PDO::FETCH_OBJ);
+        $query = $query->fetch(PDO::FETCH_OBJ);
+        $owner = mapObject($query, $this->dbFieldsMap);
+        return $owner;
     }
 
     //Esta funcion hace un alta de un dueño

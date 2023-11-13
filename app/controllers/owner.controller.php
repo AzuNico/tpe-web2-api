@@ -23,33 +23,38 @@ class OwnerController extends ApiController
         $this->userController->verifyUser();
 
         $body = $this->getData();
-        if (empty($body) || $body->fullName == null || $body->contactEmail == null || $body->phoneNumber == null) {
-            $this->view->responseMessage('Missing data', 400);
-            return;
-        }
+        $this->validateRequestBody($body);
 
         $name = $body->fullName;
         $email = $body->contactEmail;
         $phone = $body->phoneNumber;
         $this->model->insertOwner($name, $email, $phone);
-        $this->view->responseMessage('Created successfully', 200);
+        $this->view->responseMessage('Created successfully', 201);
     }
     public function get($params = [])
     {
         try {
-            $this->userController->verifyUser();
             $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
 
             if (!empty($field)) {
                 $owners = $this->model->getSortDataByField($field, $order);
+                foreach ($owners as $owner) {
+                    $ownerPets = $this->petModel->getPetsByOwner($owner->id);
+                    $owner->pets = empty($ownerPets) ? [] : $ownerPets;
+                }
                 $this->view->responseWithData($owners, 200);
                 return;
             }
 
             $owners = $this->model->getOwners($order);
-            $this->view->responseWithData($owners, 200);
 
+            foreach ($owners as $owner) {
+                $ownerPets = $this->petModel->getPetsByOwner($owner->id);
+                $owner->pets = empty($ownerPets) ? [] : $ownerPets;
+            }
+
+            $this->view->responseWithData($owners, 200);
         } catch (\Throwable $th) {
             $this->view->responseStatus(500);
         }
@@ -58,49 +63,44 @@ class OwnerController extends ApiController
     public function getOne($params = [])
     {
         try {
-            $this->userController->verifyUser();
-            $map = $this->model->getDbFieldsMap();
             $idowner = $params[':ID'];
 
             $owner = $this->model->getOwnerByID($idowner);
 
             if ($owner) {
-                $owner = mapDataList($owner, $map);
+
+                $ownerPets = $this->petModel->getPetsByOwner($owner->id);
+                $owner->pets = empty($ownerPets) ? [] : $ownerPets;
+
                 $this->view->responseWithData($owner, 200);
             } else {
                 $message = 'The owner with ID ' . $idowner . ' doesnt exist';
                 $this->view->responseWithData(null, 404, $message);
             }
         } catch (\Throwable $th) {
+            echo $th;
             $errorMessage = 'Error al obtener el owner con ID ' . $idowner;
             $this->view->responseMessage($errorMessage, 500);
         }
     }
 
-    public function update($params = [])
+    public function update()
     {
         try {
             $this->userController->verifyUser();
-
-            $idowner = $params[':ID'];
-
             $body = $this->getData();
+            $isEditing = true;
+            $this->validateRequestBody($body, $isEditing);
 
-            if ($body == null) {
-                $this->view->responseMessage('Falta información para actualizar el recurso', 400);
-                return;
-            }
-            if (empty($idowner) || $body->fullName == null || $body->contactEmail == null || $body->phoneNumber == null) {
-                $this->view->responseMessage('Falta información para actualizar el recurso', 400);
-                return;
-            }
+            $owner = $this->model->getOwnerByID($body->id);
 
-            if (!$this->model->getOwnerByID($idowner)) {
-                $this->view->responseMessage('El recurso solicitado con id ' . $idowner . ' no existe', 404);
+            if (empty($owner)) {
+                $this->view->responseMessage('El recurso que desea actualizar con id ' . $body->id . ' no existe', 404);
                 return;
             }
 
 
+            $idowner = $body->id;
             $name = $body->fullName;
             $email = $body->contactEmail;
             $phone = $body->phoneNumber;
@@ -108,7 +108,7 @@ class OwnerController extends ApiController
             $this->model->editOwner($idowner, $name, $email, $phone);
             $this->view->responseWithData('Updated successfully', 200);
         } catch (\Throwable $th) {
-            $errorMessage = 'Error al actualizar el owner con ID ' . $idowner;
+            $errorMessage = "Error al actualizar, verificar los datos ingresados";
             $this->view->responseMessage($errorMessage, 500);
         }
     }
@@ -140,7 +140,7 @@ class OwnerController extends ApiController
             $this->model->deleteOwner($idowner);
             $this->view->responseWithData('Deleted successfully', 200);
         } catch (\Throwable $th) {
-            $errorMessage = 'Error al eliminar el owner con ID ' . $idowner;
+            $errorMessage = 'Error al eliminar el recurso con ID ' . $idowner;
             $this->view->responseMessage($errorMessage, 500);
         }
     }

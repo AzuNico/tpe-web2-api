@@ -7,6 +7,7 @@ class UsersModel extends Model {
         parent::__construct();
         $this->tableName = 'usuarios';
         $this->allowedFields = ['ID','USER', 'PASSWORD'];
+        $this->dbFieldsMap = ['id' => 'ID', 'user' => 'USER', 'password' => 'PASSWORD'];
     }
    
     public function getByUser($user)
