@@ -23,10 +23,7 @@ class OwnerController extends ApiController
         $this->userController->verifyUser();
 
         $body = $this->getData();
-        if (empty($body) || $body->fullName == null || $body->contactEmail == null || $body->phoneNumber == null) {
-            $this->view->responseMessage('Missing data', 400);
-            return;
-        }
+        $this->validateRequestBody($body);
 
         $name = $body->fullName;
         $email = $body->contactEmail;
@@ -75,30 +72,23 @@ class OwnerController extends ApiController
         }
     }
 
-    public function update($params = [])
+    public function update()
     {
         try {
             $this->userController->verifyUser();
-
-            $idowner = $params[':ID'];
-
             $body = $this->getData();
+            $isEditing = true;
+            $this->validateRequestBody($body, $isEditing);
 
-            if ($body == null) {
-                $this->view->responseMessage('Falta información para actualizar el recurso', 400);
-                return;
-            }
-            if (empty($idowner) || $body->fullName == null || $body->contactEmail == null || $body->phoneNumber == null) {
-                $this->view->responseMessage('Falta información para actualizar el recurso', 400);
-                return;
-            }
+            $owner = $this->model->getOwnerByID($body->id);
 
-            if (!$this->model->getOwnerByID($idowner)) {
-                $this->view->responseMessage('El recurso solicitado con id ' . $idowner . ' no existe', 404);
+            if(empty($owner)){
+                $this->view->responseMessage('El recurso que desea actualizar con id ' . $body->id . ' no existe', 404);
                 return;
             }
 
-
+            
+            $idowner = $body->id;
             $name = $body->fullName;
             $email = $body->contactEmail;
             $phone = $body->phoneNumber;
@@ -106,7 +96,7 @@ class OwnerController extends ApiController
             $this->model->editOwner($idowner, $name, $email, $phone);
             $this->view->responseWithData('Updated successfully', 200);
         } catch (\Throwable $th) {
-            $errorMessage = 'Error al actualizar el owner con ID ' . $idowner;
+            $errorMessage = "Error al actualizar, verificar los datos ingresados";
             $this->view->responseMessage($errorMessage, 500);
         }
     }
@@ -138,7 +128,7 @@ class OwnerController extends ApiController
             $this->model->deleteOwner($idowner);
             $this->view->responseWithData('Deleted successfully', 200);
         } catch (\Throwable $th) {
-            $errorMessage = 'Error al eliminar el owner con ID ' . $idowner;
+            $errorMessage = 'Error al eliminar el recurso con ID ' . $idowner;
             $this->view->responseMessage($errorMessage, 500);
         }
     }

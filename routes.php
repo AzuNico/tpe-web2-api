@@ -13,12 +13,12 @@ $router = new Router();
 $router->addRoute("owners",     "GET",    "OwnerController",   "get"   );
 $router->addRoute("owners/:ID", "GET",    "OwnerController",   "getOne");
 $router->addRoute("owners",     "POST",   "OwnerController",   "create");
-$router->addRoute("owners/:ID", "PUT",    "OwnerController",   "update");
+$router->addRoute("owners",     "PUT",    "OwnerController",   "update");
 $router->addRoute("owners/:ID", "DELETE", "OwnerController",   "delete");
 
 $router->addRoute("pets",       "GET",    "PetController",     "get"   );
 $router->addRoute("pets/:ID",   "GET",    "PetController",     "getOne");
-$router->addRoute("pets/:ID",   "PUT",    "PetController",     "update");
+$router->addRoute("pets",       "PUT",    "PetController",     "update");
 
 
 
