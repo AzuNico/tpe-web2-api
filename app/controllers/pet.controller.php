@@ -3,7 +3,6 @@ require_once('app/controllers/api.controller.php');
 require_once('app/models/pet.model.php');
 require_once('app/models/owner.model.php');
 require_once('app/controllers/user.controller.php');
-require_once('app/dtos/pet.dto.php');
 require_once('app/helpers/adapter.api.helper.php');
 
 class PetController extends ApiController
@@ -39,7 +38,7 @@ class PetController extends ApiController
             $pets = $this->model->getPets($order);
             $this->view->responseWithData($pets, 200);
         } catch (Exception $e) {
-            $this->view->responseMessage("Error", 500);
+            $this->view->responseMessage("Error al obtener el listado.", 500);
         }
     }
 
@@ -51,30 +50,36 @@ class PetController extends ApiController
             $pet = $this->model->getPetByID($id);
             $this->view->responseWithData($pet, 200);
         } catch (Exception $e) {
-            $this->view->responseMessage("Error", 500);
+            $this->view->responseMessage("Error al obtener recurso", 500);
         }
     }
 
-    public function update($params = [])
+    public function update()
     {
-      try {
-        $this->userController->verifyUser();
-        $id = $params[':ID'];
-        $body = $this->getData();
-        if (empty($body) || $body->name == null || $body->age == null || $body->weight == null || $body->type == null || $body->idowner == null) {
-            $this->view->responseMessage('Missing data', 400);
-            return;
+        try {
+            $this->userController->verifyUser();
+            $body = $this->getData();
+            $isEditing = true;
+            $this->validateRequestBody($body, $isEditing);
+
+            $pet = $this->model->getPetByID($body->id);
+
+            if(empty($pet)){
+                $this->view->responseMessage('El recurso que desea actualizar con id ' . $body->id . ' no existe', 404);
+                return;
+            }
+
+            $id = $body->id;
+            $name = $body->name;
+            $age = $body->age;
+            $weight = $body->weight;
+            $type = $body->type;
+            $idowner = $body->ownerId;
+            $this->model->editPet($id, $name, $age, $weight, $type, $idowner);
+            $this->view->responseMessage('Updated successfully', 200);
+        } catch (Exception $e) {
+            $this->view->responseMessage("Error al actualizar, verificar los datos ingresados", 500);
         }
-        $name = $body->name;
-        $age = $body->age;
-        $weight = $body->weight;
-        $type = $body->type;
-        $idowner = $body->idowner;
-        $this->model->editPet($id, $name, $age, $weight, $type, $idowner);
-        $this->view->responseMessage('Updated successfully', 200);
-      } catch (Exception $e) {
-        $this->view->responseMessage("Error", 500);
-      }
     }
 
     public function delete($params = [])
