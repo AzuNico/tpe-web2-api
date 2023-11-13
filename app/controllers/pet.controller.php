@@ -21,22 +21,22 @@ class PetController extends ApiController
 
     public function create($params = [])
     {
-        //$this->userController->verifyUser();
+        $this->userController->verifyUser();
 
         $body = $this->getData();
-        var_dump($body);
-        //$this->validateRequestBody($body);
+        
+        $this->validateRequestBody($body);
         
 
-        $nombre = $body->nombre;
-        $edad = $body->edad;
-        $peso = $body->peso;
-        $tipo = $body->tipo;
-        $id_duenio = $body->id_duenio;
+        $nombre = $body->name;
+        $edad = $body->age;
+        $peso = $body->weight;
+        $tipo = $body->type;
+        $id_duenio = $body->ownerId;
 
         $this->model->insertPet($nombre, $edad, $peso, $tipo, $id_duenio);
 
-        $this->view->responseMessage("Creado!",201);
+        $this->view->responseMessage("Creado con exito",201);
     }
     public function get($params = [])
     {
