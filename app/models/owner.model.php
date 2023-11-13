@@ -1,27 +1,39 @@
 <?php
 require_once('app/models/model.php');
-class OwnerModel extends Model {
+require_once('app/helpers/adapter.api.helper.php');
+class OwnerModel extends Model
+{
 
 
     public function __construct()
     {
         parent::__construct();
         $this->tableName = 'duenio';
-        $this->allowedFields = ['NOMBRE', 'MAIL', 'TELEFONO'];
+        $this->allowedFields = ['ID', 'NOMBRE', 'MAIL', 'TELEFONO'];
+        $this->dbFieldsMap = [
+            'id' => 'ID',
+            'fullName' => 'NOMBRE',
+            'contactEmail' => 'MAIL',
+            'phoneNumber' => 'TELEFONO',
+        ];
     }
 
-    public function getOwners()
+    public function getOwners($order = 'ASC')
     {
-        $query = $this->db->prepare('SELECT * FROM `duenio` WHERE 1');
+        $query = $this->db->prepare('SELECT * FROM `duenio` ORDER BY `ID` ' . $order);
         $query->execute();
-        return $query->fetchAll(PDO::FETCH_OBJ);
+        $query = $query->fetchAll(PDO::FETCH_OBJ);
+        $owners = mapDataList($query, $this->dbFieldsMap);
+        return $owners;
     }
 
     public function getOwnerByID($id)
     {
         $query = $this->db->prepare('SELECT * FROM `duenio` WHERE `ID` = ?');
         $query->execute([$id]);
-        return $query->fetch(PDO::FETCH_OBJ);
+        $query = $query->fetch(PDO::FETCH_OBJ);
+        $owner = mapObject($query, $this->dbFieldsMap);
+        return $owner;
     }
 
     //Esta funcion hace un alta de un dueño
@@ -45,5 +57,4 @@ class OwnerModel extends Model {
         $query = $this->db->prepare('DELETE FROM `duenio` WHERE `ID`=?');
         $query->execute([$id]);
     }
-
 }
