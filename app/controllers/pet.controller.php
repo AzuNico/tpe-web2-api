@@ -3,7 +3,6 @@ require_once('app/controllers/api.controller.php');
 require_once('app/models/pet.model.php');
 require_once('app/models/owner.model.php');
 require_once('app/controllers/user.controller.php');
-require_once('app/dtos/pet.dto.php');
 require_once('app/helpers/adapter.api.helper.php');
 
 class PetController extends ApiController
@@ -61,7 +60,7 @@ class PetController extends ApiController
         $this->userController->verifyUser();
         $id = $params[':ID'];
         $body = $this->getData();
-        if (empty($body) || $body->name == null || $body->age == null || $body->weight == null || $body->type == null || $body->idowner == null) {
+        if (empty($body) || $body->name == null || $body->age == null || $body->weight == null || $body->type == null || $body->ownerId == null) {
             $this->view->responseMessage('Missing data', 400);
             return;
         }
@@ -69,7 +68,7 @@ class PetController extends ApiController
         $age = $body->age;
         $weight = $body->weight;
         $type = $body->type;
-        $idowner = $body->idowner;
+        $idowner = $body->ownerId;
         $this->model->editPet($id, $name, $age, $weight, $type, $idowner);
         $this->view->responseMessage('Updated successfully', 200);
       } catch (Exception $e) {

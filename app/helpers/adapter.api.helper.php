@@ -1,5 +1,4 @@
 <?php
-require_once('app/dtos/owner.dto.php');
 
 function mapObject($object, $map)
 {
