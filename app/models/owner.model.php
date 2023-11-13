@@ -37,7 +37,6 @@ class OwnerModel extends Model
     }
 
     public function getFilterBy($filter){
-        echo 'a';
         $query = $this->db->prepare('SELECT * FROM `duenio` WHERE id LIKE ? OR nombre LIKE ? OR mail LIKE ? OR telefono LIKE ?');
         $query->execute([$filter,$filter,$filter,$filter]);
         $query = $query->fetchAll(PDO::FETCH_OBJ);
