@@ -1,29 +1,67 @@
 <?php
-require_once 'app/controllers/api.controller.php';
-require_once './app/models/pet.model.php';
-require_once './app/models/owner.model.php';
+require_once('app/controllers/api.controller.php');
+require_once('app/models/pet.model.php');
+require_once('app/models/owner.model.php');
+require_once('app/controllers/user.controller.php');
+require_once('app/dtos/pet.dto.php');
+require_once('app/helpers/adapter.api.helper.php');
 
 class PetController extends ApiController
 {
-    private $petModel;
     private $ownerModel;
 
-    private $authHelper;
+    private $userController;
 
     public function __construct()
     {
         parent::__construct();
-        $this->petModel = new PetModel();
+        $this->model = new PetModel();
         $this->ownerModel = new OwnerModel();
-        $this->authHelper = new AuthHelper();
+        $this->userController = new UserController();
     }
 
-    public function create(){}
-    public function get($params = []){}
-    
-    public function update(){}
+    public function create()
+    {
+    }
+    public function get($params = [])
+    {
+        try {
+            $this->userController->verifyUser();
+            $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
+            $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
 
-    public function delete($params = []){}
+            if (!empty($field)) {
+                $pets = $this->model->getSortDataByField($field, $order);
+                $this->view->responseWithData($pets, 200);
+                return;
+            }
+
+            $pets = $this->model->getPets($order);
+            $this->view->responseWithData($pets, 200);
+        } catch (Exception $e) {
+            $this->view->responseMessage("Error", 500);
+        }
+    }
+
+    public function getOne($params = [])
+    {
+        try {
+            $this->userController->verifyUser();
+            $id = $params[':ID'];
+            $pet = $this->model->getPetByID($id);
+            $this->view->responseWithData($pet, 200);
+        } catch (Exception $e) {
+            $this->view->responseMessage("Error", 500);
+        }
+    }
+
+    public function update($params = [])
+    {
+    }
+
+    public function delete($params = [])
+    {
+    }
 
 
 

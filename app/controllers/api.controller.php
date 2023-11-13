@@ -4,7 +4,9 @@ require_once 'app/views/api.view.php';
 abstract class ApiController
 {
     protected $view;
-    private $data;
+
+    protected $model;
+    protected $data;
 
     function __construct()
     {
@@ -24,6 +26,6 @@ abstract class ApiController
     public abstract function create(); // POST viaja por body
     public abstract function get($params = []); // GET viaja por URL
     public abstract function getOne($params = []); // GET viaja por URL
-    public abstract function update(); // PUT viaja por body
+    public abstract function update($params = []); // PUT viaja por body
     public abstract function delete($params = []); // DELETE viaja por URL
 }
