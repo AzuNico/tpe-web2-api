@@ -75,6 +75,7 @@ Respuesta:
 El atributo `user` debe ser un formato de mail válido.
 
 Solicitud:
+
 ```http
 POST /register
 Content-Type: application/json
@@ -86,13 +87,13 @@ Content-Type: application/json
 ```
 
 Respuesta:
+
 ```json
 {
   "status": 201,
   "message": "Se ha registrado correctamente"
 }
 ```
-
 
 ## Dueños
 
@@ -101,6 +102,7 @@ Solicitud:
 ### `GET /owners`
 
 Respuesta:
+
 ```json
 {
   "data": [
@@ -108,13 +110,15 @@ Respuesta:
       "id": 1,
       "fullName": "Juan Perez",
       "contactEmail": "juanperez@gmail.com",
-      "phoneNumber": "42423423"
+      "phoneNumber": "42423423",
+      "pets": []
     },
     {
       "id": 2,
       "fullName": "Ana Gomez",
       "contactEmail": "anagomez@gmail.com",
-      "phoneNumber": "42423423"
+      "phoneNumber": "42423423",
+      "pets": []
     }
   ],
   "status": 200,
@@ -127,13 +131,15 @@ Solicitud:
 ### `GET /owners/1`
 
 Respuesta:
+
 ```json
 {
   "data": {
     "id": 1,
     "fullName": "Juan Perez",
     "contactEmail": "juanperez@gmail.com",
-    "phoneNumber": "42423423"
+    "phoneNumber": "42423423",
+    "pets": []
   },
   "status": 200,
   "message": "OK"
@@ -143,6 +149,7 @@ Respuesta:
 ### `POST /owners`
 
 Solicitud:
+
 ```http
 POST /owners
 Content-Type: application/json
@@ -165,7 +172,10 @@ Respuesta:
 
 ### `PUT /owners`
 
+Solo podra editar los datos del dueño, no del atributo `pets`.
+
 Solicitud:
+
 ```http
 PUT /owners
 Content-Type: application/json
@@ -191,7 +201,10 @@ Solicitud:
 
 ### `DELETE /owners/1`
 
+Si el `owner` posee mascotas asociadas a él el servicio arrojara error 400 Bad Request.
+
 Respuesta:
+
 ```json
 {
     "status":200,
@@ -201,19 +214,134 @@ Respuesta:
 
 ## Mascotas
 
+Solicitud:
 
+### `GET /pets`
 
+Respuesta:
 
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Lana",
+      "age": 2,
+      "weight": 3,
+      "type": "Gato",
+      "ownerId": 2
+    },
+    {
+      "id": 2,
+      "name": "Luna",
+      "age": 5,
+      "weight": 7,
+      "type": "Perro",
+      "ownerId": 3
+    }
+  ],
+  "status": 200,
+  "message": "OK"
+}
 
+```
 
+Solicitud:
+
+### `GET /pets/1`
+
+Respuesta:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Lana",
+    "age": 2,
+    "weight": 3,
+    "type": "Gato",
+    "ownerId": 2
+  },
+  "status": 200,
+  "message": "OK"
+}
+
+```
+
+### `POST /pets`
+
+Solicitud:
+
+```http
+POST /pets
+Content-Type: application/json
+
+{
+    "name": "Lana",
+    "age": 2,
+    "weight": 3,
+    "type": "Gato",
+    "ownerId": 2
+}
+```
+
+Respuesta:
+
+```json
+{
+    "status":201,
+    "message": "Created successfully"
+}
+```
+
+### `PUT /pets`
+
+Solicitud:
+
+```http
+PUT /pets
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "Lana",
+    "age": 2,
+    "weight": 3,
+    "type": "Gato",
+    "ownerId": 2
+}
+```
+
+Respuesta:
+
+```json
+{
+    "status":200,
+    "message": "Updated successfully"
+}
+```
+
+Solicitud:
+
+### `DELETE /pets/1`
+
+Respuesta:
+
+```json
+{
+    "status":200,
+    "message": "Deleted successfully"
+}
+```
 
 ## Errores
 
 En caso de error, la API devolverá un código de estado HTTP y un objeto JSON con más información sobre el error.
 
-## Ejemplos:
+## Ejemplos
 
 Respuesta:
+
 ```json
 {
     "status": 500,
@@ -222,9 +350,17 @@ Respuesta:
 ```
 
 Respuesta:
+
 ```json
 {
     "status": 404,
     "message": "Not found"
 }
 ```
+
+## Autores
+
+Este proyecto fue creado por:
+
+- Nicolás Azuaga azuaganicolas@gmail.com
+- Luca Ochoa Marcos ochoa.luca@gmail.com
