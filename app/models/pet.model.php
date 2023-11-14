@@ -44,6 +44,14 @@ class PetModel extends Model
         return $pets;
     }
 
+    public function getFilterBy($filter){
+        $query = $this->db->prepare('SELECT * FROM `mascotas` WHERE id LIKE ? OR nombre LIKE ? OR edad LIKE ? OR peso LIKE ? OR tipo LIKE ? OR id_duenio LIKE ?');
+        $query->execute([$filter,$filter,$filter,$filter,$filter,$filter]);
+        $query = $query->fetchAll(PDO::FETCH_OBJ);
+        $pets = mapDataList($query, $this->dbFieldsMap);
+        return $pets;
+    }
+
     //Esta funcion hace un alta de una mascota la tabla mascotas tiene columnas ID, NOMBRE, EDAD ,PESO ,TIPO,ID_DUENIO
     public function insertPet($name, $age, $weight, $type, $idowner)
     {

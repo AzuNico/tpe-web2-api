@@ -19,19 +19,52 @@ class PetController extends ApiController
         $this->userController = new UserController();
     }
 
-    public function create()
+    public function create($params = [])
     {
-        // status 201 created
+        $this->userController->verifyUser();
+
+        $body = $this->getData();
+        
+        $this->validateRequestBody($body);
+        
+
+        $nombre = $body->name;
+        $edad = $body->age;
+        $peso = $body->weight;
+        $tipo = $body->type;
+        $id_duenio = $body->ownerId;
+
+        $this->model->insertPet($nombre, $edad, $peso, $tipo, $id_duenio);
+
+        $this->view->responseMessage("Created successfully",201);
     }
     public function get($params = [])
     {
         try {
             $field = !empty($_GET['sort']) ? $_GET['sort'] : '';
             $order = (!empty($_GET['order']) && strtoupper($_GET['order']) == 'D') ? 'DESC' : 'ASC';
+            $filter = !empty($_GET['search']) ? $_GET['search'] : '';           //new filtro
+            $filterOwnId = !empty($_GET['searchownid']) ? $_GET['searchownid'] : '';  
 
             if (!empty($field)) {
                 $pets = $this->model->getSortDataByField($field, $order);
                 $this->view->responseWithData($pets, 200);
+                return;
+            }
+
+            if (!empty($filter)){
+                $pets = $this->model->getFilterBy($filter);
+                if (empty($pets)) {
+                    $this->view->responseMessage("No se encontraron resultados.", 200);
+                    return;
+                }
+                $this->view->responseWithData($pets,200);
+                return;
+            }
+
+            if (!empty($filterOwnId)){
+                $pets = $this->model->getPetsByOwner($filterOwnId);
+                $this->view->responseWithData($pets,200);
                 return;
             }
 
