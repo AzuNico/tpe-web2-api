@@ -21,6 +21,7 @@ class PetController extends ApiController
 
     public function create($params = [])
     {
+       try {
         $this->userController->verifyUser();
 
         $body = $this->getData();
@@ -33,10 +34,21 @@ class PetController extends ApiController
         $peso = $body->weight;
         $tipo = $body->type;
         $id_duenio = $body->ownerId;
+        
+        $owner = $this->ownerModel->getOwnerByID($id_duenio);
+
+        if (empty($owner)) {
+            $this->view->responseMessage("El dueño con id " . $id_duenio . " no existe", 404);
+            return;
+        }
 
         $this->model->insertPet($nombre, $edad, $peso, $tipo, $id_duenio);
 
         $this->view->responseMessage("Created successfully",201);
+       } catch (\Throwable $th) {
+        //throw $th;
+        $this->view->responseMessage("Error al crear recurso",500);
+       }
     }
     public function get($params = [])
     {
@@ -116,81 +128,21 @@ class PetController extends ApiController
 
     public function delete($params = [])
     {
+        try {
+            $this->userController->verifyUser();
+            $id = $params[':ID'];
+            $pet = $this->model->getPetByID($id);
+
+            if(empty($pet)){
+                $this->view->responseMessage('El recurso que desea eliminar con id ' . $id . ' no existe', 404);
+                return;
+            }
+
+            $this->model->deletePet($id);
+            $this->view->responseMessage('Deleted successfully', 200);
+        } catch (Exception $e) {
+            $this->view->responseMessage("Error al eliminar recurso", 500);
+        }
     }
 
-
-
-
-    // public function getAllPets()
-    // {
-    //     $pets = $this->petModel->getPets();
-    //     $owners = $this->ownerModel->getOwners();
-    //     $this->view->showPets($pets, $owners);
-    // }
-
-    // public function getPetById($idpet)
-    // {
-    //     $pet = $this->petModel->getPetByID($idpet);
-    //     $idowner = $pet->ID_DUENIO;
-    //     $owner = $this->ownerModel->getOwnerByID($idowner);
-    //     $this->view->showSpecificPet($pet, $owner);
-    // }
-
-
-    // public function getPetsByOwner($idOwner)
-    // {
-    //     $pets = $this->petModel->getPetsByOwner($idOwner);
-    //     $owner = $this->ownerModel->getOwnerByID($idOwner);
-
-    //     $this->view->showPetsByOwner($owner, $pets);
-    // }
-
-    // //------ ABM PETS ------ //
-
-    // //funcion para mostrar la vista de creación de una mascota para un dueño
-    // public function showCreatePet()
-    // {
-    //     $owners = $this->ownerModel->getOwners();
-    //     $this->view->showCreatePet($owners);
-    // }
-
-
-    // //funcion para crear una pet
-    // public function createPet()
-    // {
-    //     $name = $_POST['name'];
-    //     $age = $_POST['age'];
-    //     $weight = $_POST['weight'];
-    //     $type = $_POST['type'];
-    //     $idowner = $_POST['idowner'];
-    //     $this->petModel->insertPet($name, $age, $weight, $type, $idowner);
-    //     header("Location: " . BASE_URL . "/list-pets");
-    // }
-
-    // //funcion para mostrar la edición de una pet
-    // public function showEditPet($idpet)
-    // {
-    //     $owners = $this->ownerModel->getOwners();
-    //     $pet = $this->petModel->getPetByID($idpet);
-    //     $this->view->showEditPet($pet, $owners);
-    // }
-
-    // //funcion para editar una pet
-    // public function editPet($idpet)
-    // {
-    //     $name = $_POST['name'];
-    //     $age = $_POST['age'];
-    //     $weight = $_POST['weight'];
-    //     $type = $_POST['type'];
-    //     $idowner = $_POST['idowner'];
-    //     $this->petModel->editPet($idpet, $name, $age, $weight, $type, $idowner);
-    //     header("Location: " . BASE_URL . "/list-pets");
-    // }
-
-    // //funcion para eliminar una pet
-    // public function deletePet($idpet)
-    // {
-    //     $this->petModel->deletePet($idpet);
-    //     header("Location: " . BASE_URL . "/list-pets");
-    // }
 }
