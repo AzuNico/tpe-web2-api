@@ -19,6 +19,7 @@ Trabajo Práctico Especial 3 - API REST realizada en PHP
 - `GET /pets/:ID`: Recupera una mascota específica por ID.
 - `POST /pets`: Crea una nueva mascota.
 - `PUT /pets`: Actualiza una mascota.
+- `DELETE /pets/:ID`: Elimina una mascota específica por ID.
 
 ### Registro e inicio de sesión de usuario
 
