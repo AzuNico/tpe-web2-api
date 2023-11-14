@@ -27,8 +27,7 @@ Trabajo Práctico Especial 3 - API REST realizada en PHP
 
 ## Uso
 
-Para usar esta API, envía una solicitud HTTP al endpoint deseado con el método apropiado. Para los endpoints que requieren un ID, reemplaza `:ID` con el ID del recurso. Tambien podes buscar con un filtro que quieras agregando al final de la url `?search={filtro}`,
-si es que quisieras buscar en las Mascotas, las cuales sus dueños tengan una id en comun podes usar `?searchownid={id}` al final de la url.
+Para utilizar esta API, envía una solicitud HTTP al endpoint deseado con el método apropiado. Para los endpoints que requieren un ID, reemplaza `:ID` con el ID del recurso.
 
 Para las solicitudes `POST` y `PUT`, incluye los datos del recurso en el cuerpo de la solicitud en formato JSON.
 
@@ -38,7 +37,7 @@ Esta API utiliza JWT para autenticar al usuario, sólo los usuarios registrados 
 
 Por defecto, las consultas de tipo `GET` se ordenan por `id` de manera `ascendente`.
 
-Para ordenar los resultados de busqueda del metodo `GET` debera utilizar los siguientes query params:
+Para ordenar los resultados de búsqueda del método `GET` debera utilizar los siguientes query params:
 
 #### Sort
 
@@ -63,9 +62,22 @@ Ejemplo:
 GET /owners?order=D
 ```
 
-### Filtrado
+### Bonus Track
+
+Puedes mejorar el ordenamiento si utilizas una combinación de ambos parametros `sort` y `order`
+
+Ejemplo:
+
+```http
+GET /owners?sort=fullName&order=D
+```
+
+## Búsquedas
+
+Tambien puedes buscar con un filtro lo que quieras agregando al final de la url `?search={filtro}`.
 
 Establece el filtro.
+
 Utilice cualquier caracter que sirva de filtro para buscar entre el recurso que desees
 
 ### `GET /{recurso}?search={filtro}`
@@ -76,14 +88,14 @@ Ejemplo:
 GET /owners?search=Luca
 ```
 
-## Bonus Track
+### Bonus Track
 
-Puede mejorar su ordenamiento si realiza una combinación de ambos parametros `sort` y `order`
+Si quieres buscar las mascotas perteneceientes a un dueño determinado puedes utilizar el siguiente parametro `?searchownid={id}` al final de la url.
 
 Ejemplo:
 
 ```http
-GET /owners?sort=fullName&order=D
+GET /pets?searchownid=1
 ```
 
 # Ejemplos de Solicitudes y Respuestas
