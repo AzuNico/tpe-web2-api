@@ -54,6 +54,10 @@ class PetController extends ApiController
 
             if (!empty($filter)){
                 $pets = $this->model->getFilterBy($filter);
+                if (empty($pets)) {
+                    $this->view->responseMessage("No se encontraron resultados.", 200);
+                    return;
+                }
                 $this->view->responseWithData($pets,200);
                 return;
             }

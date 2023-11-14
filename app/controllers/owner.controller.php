@@ -49,9 +49,13 @@ class OwnerController extends ApiController
                 return;
             }
 
-            if (!empty($filter)){
+            if (!empty($filter)) {
                 $owners = $this->model->getFilterBy($filter);
-                $this->view->responseWithData($owners,200);
+                if (empty($owners)) {
+                    $this->view->responseMessage("No se encontraron resultados.", 200);
+                    return;
+                }
+                $this->view->responseWithData($owners, 200);
                 return;
             }
 
